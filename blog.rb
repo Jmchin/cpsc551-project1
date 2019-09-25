@@ -1,3 +1,9 @@
+#!/usr/bin/ruby
+
+# blog.rb
+# implements functionality found in Note 2.3 (pg 69) of Distributed
+# Systems
+
 require 'rinda/rinda'
 
 # each message for the blog is a 3-tuple <string, string, string>
@@ -5,7 +11,8 @@ require 'rinda/rinda'
 # where the second string names the topic
 # where the third string is the content
 
-uri = "druby://localhost:61676"
+port = 61676
+uri = "druby://localhost:#{port}"
 DRb.start_service
 
 # TupleSpaceProxy allows remote TS to appear as local to this process
