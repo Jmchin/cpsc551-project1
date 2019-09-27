@@ -20,6 +20,20 @@ DRb.start_service
 TS = Rinda::TupleSpaceProxy.new(DRbObject.new(nil, tsuri))
 puts "Connected to tuplespace #{TS}"
 
+
+# allow nil values to be passed to the XML-RPC server
+def suppress_warnings
+  previous_VERBOSE, $VERBOSE = $VERBOSE, nil
+  yield
+  $VERBOSE = previous_VERBOSE
+end
+
+suppress_warnings do
+  XMLRPC::Config::ENABLE_NIL_PARSER = true
+  XMLRPC::Config::ENABLE_NIL_CREATE = true
+end
+
+
 # create handlers for _in, _out, _rd method calls from python
 class PythonBlogHandler
   def _out(name, topic, content)
@@ -36,10 +50,12 @@ end
 
 class PythonArithHandler
   def _out(op, a, b)
-    "Not implemented"
+    TS.write(["#{op}", "#{a}", "#{b}"])
+    # "Not implemented"
   end
   def _in(op, a, b)
-    "Not implemented"
+    "#{TS.take([op, a, b])}"
+    # "Not implemented"
   end
   def _rd(op, a, b)
     "Not implemented"
