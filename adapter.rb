@@ -50,8 +50,8 @@ end
 
 class PythonArithHandler
   def _out(op, a, b)
-    TS.write(["#{op}", "#{a}", "#{b}"])
-    # "Not implemented"
+    TS.write(["#{op}",a, b])
+    "wrote tuple to TS"
   end
   def _in(op, a, b)
     "#{TS.take([op, a, b])}"
