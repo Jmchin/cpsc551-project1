@@ -34,15 +34,18 @@ suppress_warnings do
 end
 
 
+# TODO: genrealize the third parameter, see Module.const_get(value)
 # create handlers for _in, _out, _rd method calls from python
 class PythonBlogHandler
   def _out(name, topic, content)
     TS.write(["#{name}", "#{topic}", "#{content}"])
     ""
   end
+
   def _in(name, topic, content)
    "#{TS.take([name, topic, String])}"
   end
+
   def _rd(name, topic, content)
     "#{TS.read([name, topic, String])}"
   end
@@ -51,14 +54,29 @@ end
 class PythonArithHandler
   def _out(op, a, b)
     TS.write(["#{op}",a, b])
-    "wrote tuple to TS"
+    "wrote" + " #{[op, a, b]} " + "to TS"
   end
+
   def _in(op, a, b)
-    "#{TS.take([op, a, b])}"
-    # "Not implemented"
+    if op == "result"
+      TS.take(["result", a, b])
+    else
+      # construct the regex translated from the python string
+      # NOTE: done this way since we cannot marshall python regexp?
+      pattern = Regexp.new(op)
+      TS.take([pattern, Module.const_get(a), Module.const_get(b)])
+    end
   end
+
   def _rd(op, a, b)
-    "Not implemented"
+    if op == "result"
+      TS.take(["result", a, b])
+    else
+      # construct the regex translated from the python string
+      # NOTE: done this way since we cannot marshall python regexp?
+      pattern = Regexp.new(op)
+      TS.read([pattern, Module.const_get(a), Module.const_get(b)])
+    end
   end
 end
 
