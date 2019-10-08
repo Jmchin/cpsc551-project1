@@ -70,7 +70,7 @@ class PythonArithHandler
 
   def _rd(op, a, b)
     if op == "result"
-      TS.take(["result", a, b])
+      TS.read(["result", a, b])
     else
       # construct the regex translated from the python string
       # NOTE: done this way since we cannot marshall python regexp?
