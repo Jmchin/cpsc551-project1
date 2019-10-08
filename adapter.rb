@@ -10,7 +10,7 @@ require 'xmlrpc/server'
 
 # setup xml-rpc server listening for incoming requests
 xmlport = 8000
-s = XMLRPC::Server.new(8000)
+s = XMLRPC::Server.new(xmlport)
 puts "Listening on port 8000..."
 
 # connect to the remote tuplespace
