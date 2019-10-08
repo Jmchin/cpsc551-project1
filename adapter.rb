@@ -36,18 +36,28 @@ end
 
 # TODO: genrealize the third parameter, see Module.const_get(value)
 # create handlers for _in, _out, _rd method calls from python
+
+# intiialize topics hash
+BLOG_TOPICS = Hash.new
+
 class PythonBlogHandler
   def _out(name, topic, content)
-    TS.write(["#{name}", "#{topic}", "#{content}"])
+    if !BLOG_TOPICS[topic]     # if topic is not in blog_topics, add it
+      BLOG_TOPICS[topic] = 1
+      TS.write(["#{name}", "#{topic}", "#{content}", BLOG_TOPICS[topic]])
+    else
+      BLOG_TOPICS[topic] += 1  # else, increment counter for topic, append to tuple
+      TS.write(["#{name}", "#{topic}", "#{content}", BLOG_TOPICS[topic]])
+    end
     ""
   end
 
-  def _in(name, topic, content)
-   "#{TS.take([name, topic, String])}"
+  def _in(name, topic, content, idx=nil)
+   "#{TS.take([name, topic, String, idx])}"
   end
 
-  def _rd(name, topic, content)
-    "#{TS.read([name, topic, String])}"
+  def _rd(name, topic, content, idx=nil)
+    "#{TS.read([name, topic, String, idx])}"
   end
 end
 
