@@ -62,14 +62,14 @@ class PythonBlogHandler
         "#{TS.take([name, topic, String, nil])}"
       else
         if idx <= BLOG_TOPICS[topic]
-            "#{TS.take([name, topic, String, idx])}"
+          "#{TS.take([name, topic, String, idx])}"
         else
-          nil  # client requests non-existent entry
+          "no-new-stories"  # client requests non-existent entry
         end
       end
 
     else
-      nil  # topic not in TS
+      "topic-not-found"  # topic not in TS
     end
   end
 
@@ -83,7 +83,7 @@ class PythonBlogHandler
         "#{TS.read([name, topic, String, nil])}"
       else
         if idx <= BLOG_TOPICS[topic]
-            "#{TS.read([name, topic, String, idx])}"
+          "#{TS.read([name, topic, String, idx])}"
         else
           "no-new-stories"  # client requests non-existent entry
         end
