@@ -37,7 +37,7 @@ end
 # TODO: genrealize the third parameter, see Module.const_get(value)
 # create handlers for _in, _out, _rd method calls from python
 
-# intiialize topics hash
+# any unseen topics being written to TS added to this hash
 BLOG_TOPICS = Hash.new
 
 class PythonBlogHandler
@@ -53,13 +53,49 @@ class PythonBlogHandler
   end
 
   def _in(name, topic, content, idx=nil)
-   "#{TS.take([name, topic, String, idx])}"
+    # TODO: check name if matching on type keyword, then construct pattern type
+
+    # ensure topic is in map of topics written to TS already
+    if BLOG_TOPICS[topic]
+
+      if idx == nil
+        "#{TS.take([name, topic, String, nil])}"
+      else
+        if idx <= BLOG_TOPICS[topic]
+            "#{TS.take([name, topic, String, idx])}"
+        else
+          nil  # client requests non-existent entry
+        end
+      end
+
+    else
+      nil  # topic not in TS
+    end
   end
 
   def _rd(name, topic, content, idx=nil)
-    "#{TS.read([name, topic, String, idx])}"
+    # TODO: check name if matching on type keyword, then construct pattern type
+
+    # ensure topic is in map of topics written to TS already
+    if BLOG_TOPICS[topic]
+
+      if idx == nil
+        "#{TS.read([name, topic, String, nil])}"
+      else
+        if idx <= BLOG_TOPICS[topic]
+            "#{TS.read([name, topic, String, idx])}"
+        else
+          nil  # client requests non-existent entry
+        end
+      end
+
+    else
+      nil  # topic not in TS
+    end
   end
+
 end
+
 
 class PythonArithHandler
   def _out(op, a, b)
