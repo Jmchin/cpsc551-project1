@@ -37,12 +37,22 @@ def main():
 
                 res = next(topic, d[topic])
 
-                if res:
+                # if res:
+                #     print(res)
+                #     d[topic] += 1
+                # else:
+                #     print("No record found!")
+                #     del d[topic]
+
+                if res == "no-new-stories":
+                    print(f'No new stories for \'{topic}\'')
+                elif res == "topic-not-found":
+                    print('Topic not found!')
+                elif res:
                     print(res)
                     d[topic] += 1
                 else:
-                    print("No record found!")
-                    del d[topic]
+                    print('Something went wrong!')
 
             if key == ord('q'):
                 return

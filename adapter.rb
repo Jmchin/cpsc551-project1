@@ -85,12 +85,12 @@ class PythonBlogHandler
         if idx <= BLOG_TOPICS[topic]
             "#{TS.read([name, topic, String, idx])}"
         else
-          nil  # client requests non-existent entry
+          "no-new-stories"  # client requests non-existent entry
         end
       end
 
     else
-      nil  # topic not in TS
+      "topic-not-found"  # topic not in TS
     end
   end
 
