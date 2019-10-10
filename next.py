@@ -6,8 +6,6 @@
 
 from xmlrpc.client import ServerProxy, Error
 
-
-
 def main():
 
     # main program loop
