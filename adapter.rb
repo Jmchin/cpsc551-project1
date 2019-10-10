@@ -57,19 +57,15 @@ class PythonBlogHandler
 
     # ensure topic is in map of topics written to TS already
     if BLOG_TOPICS[topic]
-
       if idx == nil
         "#{TS.take([name, topic, String, nil])}"
+      elsif idx <= BLOG_TOPICS[topic]
+        "#{TS.take([name, topic, String, idx])}"
       else
-        if idx <= BLOG_TOPICS[topic]
-          "#{TS.take([name, topic, String, idx])}"
-        else
-          "no-new-stories"  # client requests non-existent entry
-        end
+        204  # client requests non-existent entry
       end
-
     else
-      "topic-not-found"  # topic not in TS
+      404  # topic not in TS
     end
   end
 
@@ -81,16 +77,13 @@ class PythonBlogHandler
 
       if idx == nil
         "#{TS.read([name, topic, String, nil])}"
+      elsif idx <= BLOG_TOPICS[topic]
+        "#{TS.read([name, topic, String, idx])}"
       else
-        if idx <= BLOG_TOPICS[topic]
-          "#{TS.read([name, topic, String, idx])}"
-        else
-          "no-new-stories"  # client requests non-existent entry
-        end
+        204  # client requests non-existent entry
       end
-
     else
-      "topic-not-found"  # topic not in TS
+      404  # topic not in TS
     end
   end
 

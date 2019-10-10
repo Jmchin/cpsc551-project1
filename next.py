@@ -37,16 +37,9 @@ def main():
 
                 res = next(topic, d[topic])
 
-                # if res:
-                #     print(res)
-                #     d[topic] += 1
-                # else:
-                #     print("No record found!")
-                #     del d[topic]
-
-                if res == "no-new-stories":
+                if res == 204:
                     print(f'No new stories for \'{topic}\'')
-                elif res == "topic-not-found":
+                elif res == 404:
                     print('Topic not found!')
                 elif res:
                     print(res)
