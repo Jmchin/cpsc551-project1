@@ -44,10 +44,10 @@ class PythonBlogHandler
   def _out(name, topic, content)
     if !BLOG_TOPICS[topic]     # if topic is not in blog_topics, add it
       BLOG_TOPICS[topic] = 1
-      TS.write(["#{name}", "#{topic}", "#{content}", BLOG_TOPICS[topic]])
+      TS.write([name.to_sym(), "#{topic}", "#{content}", BLOG_TOPICS[topic]])
     else
       BLOG_TOPICS[topic] += 1  # else, increment counter for topic, append to tuple
-      TS.write(["#{name}", "#{topic}", "#{content}", BLOG_TOPICS[topic]])
+      TS.write([name.to_sym(), "#{topic}", "#{content}", BLOG_TOPICS[topic]])
     end
     ""
   end
@@ -59,10 +59,14 @@ class PythonBlogHandler
     if BLOG_TOPICS[topic]
 
       if idx == nil
-        "#{TS.take([name, topic, String, nil])}"
+        if name
+          "#{TS.take([name.to_sym(), topic, String, nil])}"
+        else
+          "#{TS.take([name, topic, String, nil])}"
+        end
       else
         if idx <= BLOG_TOPICS[topic]
-          "#{TS.take([name, topic, String, idx])}"
+          "#{TS.take([name.to_sym(), topic, String, idx])}"
         else
           "no-new-stories"  # client requests non-existent entry
         end
@@ -80,10 +84,23 @@ class PythonBlogHandler
     if BLOG_TOPICS[topic]
 
       if idx == nil
-        "#{TS.read([name, topic, String, nil])}"
+        # "#{TS.read([name.to_sym(), topic, String, nil])}"
+        if name
+          "#{TS.read([name.to_sym(), topic, String, nil])}"
+        else
+          "#{TS.read([name, topic, String, nil])}"
+        end
+
       else
         if idx <= BLOG_TOPICS[topic]
-          "#{TS.read([name, topic, String, idx])}"
+          # "#{TS.read([name.to_sym(), topic, String, idx])}"
+
+          if name
+            "#{TS.read([name.to_sym(), topic, String, idx])}"
+          else
+            "#{TS.read([name, topic, String, idx])}"
+          end
+
         else
           "no-new-stories"  # client requests non-existent entry
         end
