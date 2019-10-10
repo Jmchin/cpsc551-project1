@@ -40,6 +40,25 @@ end
 # any unseen topics being written to TS added to this hash
 BLOG_TOPICS = Hash.new
 
+
+def convToRuby(content)
+  if content.class == Hash
+    case content.keys[0]
+    when "class"
+      Module.const_get(content[content.keys[0]])
+    when "regexp"
+      Regexp.new(content[content.keys[0]])
+    when "range"
+      Range.new(content[content.keys[0]][0], content[content.keys[0]][1])
+    end
+  elsif content.class == String and content[0] == ":"
+    content[1..content.length].to_sym
+  else
+    content
+  end
+end
+
+
 class PythonBlogHandler
   def _out(name, topic, content)
     if !BLOG_TOPICS[topic]     # if topic is not in blog_topics, add it
