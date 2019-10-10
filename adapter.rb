@@ -61,13 +61,14 @@ end
 
 class PythonBlogHandler
   def _out(list)
-    name, topic, content = list
+    converted = list.map { |e| convToRuby(e) }
+    name, topic, content = converted
     if !BLOG_TOPICS[topic]     # if topic is not in blog_topics, add it
       BLOG_TOPICS[topic] = 1
-      TS.write(["#{name}", "#{topic}", "#{content}", BLOG_TOPICS[topic]])
+      TS.write([name, topic, content, BLOG_TOPICS[topic]])
     else
       BLOG_TOPICS[topic] += 1  # else, increment counter for topic, append to tuple
-      TS.write(["#{name}", "#{topic}", "#{content}", BLOG_TOPICS[topic]])
+      TS.write([name, topic, content, BLOG_TOPICS[topic]])
     end
     ""
   end
@@ -102,7 +103,6 @@ class PythonBlogHandler
     # returns a new list of converted ruby types
     converted = list.map { |e| convToRuby(e) }
     name, topic, content = converted
-
     # given a specific channel
     if topic.class == String
       # ensure the channel exists

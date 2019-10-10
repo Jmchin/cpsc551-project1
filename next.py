@@ -16,7 +16,7 @@ def main():
 
         # pulls the 'next' associated tuple for topic
         def next(topic, counter):
-            t = proxy.microblog._rd(None, topic, "String", counter)
+            t = proxy.microblog._rd([None, topic, {"class" : "String"}], counter)
             return t
 
         print("Enter 'n' for next blog post")
