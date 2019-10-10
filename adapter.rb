@@ -60,7 +60,8 @@ end
 
 
 class PythonBlogHandler
-  def _out(name, topic, content)
+  def _out(list)
+    name, topic, content = list
     if !BLOG_TOPICS[topic]     # if topic is not in blog_topics, add it
       BLOG_TOPICS[topic] = 1
       TS.write(["#{name}", "#{topic}", "#{content}", BLOG_TOPICS[topic]])
@@ -71,38 +72,53 @@ class PythonBlogHandler
     ""
   end
 
-  def _in(name, topic, content, idx=nil)
-    # TODO: check name if matching on type keyword, then construct pattern type
+  def _in(list, idx=nil)
 
-    # ensure topic is in map of topics written to TS already
-    if BLOG_TOPICS[topic]
-      if idx == nil
-        "#{TS.take([name, topic, String, nil])}"
-      elsif idx <= BLOG_TOPICS[topic]
-        "#{TS.take([name, topic, String, idx])}"
+    # returns a new list of converted ruby types
+    converted = list.map { |e| convToRuby(e) }
+    name, topic, content = converted
+
+    # given a specific channel
+    if topic.class == String
+      # ensure the channel exists
+      if BLOG_TOPICS[topic]
+        if idx == nil
+          TS.take([name, topic, content, idx])
+        elsif idx <= BLOG_TOPICS[topic]
+          TS.take([name, topic, content, idx])
+        else
+          204  # non-existent entry
+        end
       else
-        204  # client requests non-existent entry
+        404    # topic not in TS
       end
     else
-      404  # topic not in TS
+      TS.take([name, topic, content, idx])
     end
   end
 
-  def _rd(name, topic, content, idx=nil)
-    # TODO: check name if matching on type keyword, then construct pattern type
+  def _rd(list, idx=nil)
 
-    # ensure topic is in map of topics written to TS already
-    if BLOG_TOPICS[topic]
+    # returns a new list of converted ruby types
+    converted = list.map { |e| convToRuby(e) }
+    name, topic, content = converted
 
-      if idx == nil
-        "#{TS.read([name, topic, String, nil])}"
-      elsif idx <= BLOG_TOPICS[topic]
-        "#{TS.read([name, topic, String, idx])}"
+    # given a specific channel
+    if topic.class == String
+      # ensure the channel exists
+      if BLOG_TOPICS[topic]
+        if idx == nil
+          TS.read([name, topic, content, idx])
+        elsif idx <= BLOG_TOPICS[topic]
+          TS.read([name, topic, content, idx])
+        else
+          204  # non-existent entry
+        end
       else
-        204  # client requests non-existent entry
+        404    # topic not in TS
       end
     else
-      404  # topic not in TS
+      TS.read([name, topic, content, idx])
     end
   end
 

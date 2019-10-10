@@ -10,20 +10,20 @@ from xmlrpc.client import ServerProxy, Error
 with ServerProxy("http://localhost:8000") as proxy:
     try:
         # bob's blog
-        proxy.microblog._out("bob", "distsys", "I am studying chap 2")
-        proxy.microblog._out(
-            "bob", "distsys", "The linda example's pretty simple")
-        proxy.microblog._out("bob", "gtcn", "Cool book!")
+        proxy.microblog._out(["bob", "distsys", "I am studying chap 2"])
+        proxy.microblog._out([
+            "bob", "distsys", "The linda example's pretty simple"])
+        proxy.microblog._out(["bob", "gtcn", "Cool book!"])
 
         # alice's blog
-        proxy.microblog._out(
-            "alice", "gtcn", "This graph theory stuff is not easy")
-        proxy.microblog._out("alice", "distsys",
-                             "I like systems more than graphs")
+        proxy.microblog._out([
+            "alice", "gtcn", "This graph theory stuff is not easy"])
+        proxy.microblog._out(["alice", "distsys",
+                              "I like systems more than graphs"])
 
         # chuck reads both blogs
-        print(proxy.microblog._rd("bob", "distsys", "String"))
-        print(proxy.microblog._rd("alice", "gtcn", "String"))
-        print(proxy.microblog._rd("bob", "gtcn", "String"))
+        print(proxy.microblog._rd(["bob", "distsys", {"class" : "String"}]))
+        print(proxy.microblog._rd(["alice", "gtcn", {"class" : "String"}]))
+        print(proxy.microblog._rd(["bob", "gtcn", {"class" : "String"}]))
     except Error as e:
         print(f'Error: {e}')
