@@ -124,35 +124,53 @@ class PythonBlogHandler
 
 end
 
-
 class PythonArithHandler
-  def _out(op, a, b)
-    TS.write(["#{op}",a, b])
-    "wrote" + " #{[op, a, b]} " + "to TS"
+  def _out (list)
+    converted = list.map { |e| convToRuby(e) }
+    TS.write(converted)
+    "wrote #{converted} to TS"
   end
 
-  def _in(op, a, b)
-    if op == "result"
-      TS.take(["result", a, b])
-    else
-      # construct the regex translated from the python string
-      # NOTE: done this way since we cannot marshall python regexp?
-      pattern = Regexp.new(op)
-      TS.take([pattern, Module.const_get(a), Module.const_get(b)])
-    end
+  def _in(list)
+    converted = list.map { |e| convToRuby(e) }
+    TS.take(converted)
   end
 
-  def _rd(op, a, b)
-    if op == "result"
-      TS.read(["result", a, b])
-    else
-      # construct the regex translated from the python string
-      # NOTE: done this way since we cannot marshall python regexp?
-      pattern = Regexp.new(op)
-      TS.read([pattern, Module.const_get(a), Module.const_get(b)])
-    end
+  def _rd(list)
+    converted = list.map { |e| convToRuby(e) }
+    TS.read(converted)
   end
 end
+
+
+# class PythonArithHandler
+#   def _out(op, a, b)
+#     TS.write(["#{op}",a, b])
+#     "wrote" + " #{[op, a, b]} " + "to TS"
+#   end
+
+#   def _in(op, a, b)
+#     if op == "result"
+#       TS.take(["result", a, b])
+#     else
+#       # construct the regex translated from the python string
+#       # NOTE: done this way since we cannot marshall python regexp?
+#       pattern = Regexp.new(op)
+#       TS.take([pattern, Module.const_get(a), Module.const_get(b)])
+#     end
+#   end
+
+#   def _rd(op, a, b)
+#     if op == "result"
+#       TS.read(["result", a, b])
+#     else
+#       # construct the regex translated from the python string
+#       # NOTE: done this way since we cannot marshall python regexp?
+#       pattern = Regexp.new(op)
+#       TS.read([pattern, Module.const_get(a), Module.const_get(b)])
+#     end
+#   end
+# end
 
 
 s.add_handler("microblog", PythonBlogHandler.new)
