@@ -9,4 +9,5 @@ port = 61676
 uri = "druby://localhost:#{port}"
 
 DRb.start_service(uri, Rinda::TupleSpace.new)
+puts "Tuplespace initialized at #{uri}"
 DRb.thread.join
