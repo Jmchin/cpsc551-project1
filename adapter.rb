@@ -47,6 +47,8 @@ def convToRuby(content)
       Regexp.new(content[content.keys[0]])
     when "range"
       Range.new(content[content.keys[0]][0], content[content.keys[0]][1])
+    when "symbol"
+      content[content.keys[0]].to_sym
     end
   elsif content.class == String and content[0] == ":"
     content[1..content.length].to_sym
